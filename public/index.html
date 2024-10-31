@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Joke Book!</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #e1e8ed;
+        font-family: "Arial", sans-serif;
+        color: #14171a;
+      }
+      h1 {
+        font-size: 3rem;
+        text-align: center;
+        margin: 20px;
+        color: #1da1f2;
+        text-shadow: 2px 2px #fff;
+      }
+      h2 {
+        font-size: 2rem;
+        text-align: center;
+        color: #657786;
+        margin-top: 40px;
+        border-bottom: 2px solid #1da1f2;
+        padding-bottom: 10px;
+      }
+      #categories,
+      #joke {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        width: 80%;
+        max-width: 600px;
+        font-size: 1.2rem;
+      }
+      button {
+        background-color: #1da1f2;
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-size: 1.5rem;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #0d95e8;
+      }
+      footer {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 0.8rem;
+        color: #657786;
+      }
+      .container {
+        margin-top: 50px;
+      }
+      .rounded-border {
+        border: 2px dashed #1da1f2;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Joke Book!</h1>
+      <div class="rounded-border">
+        <h2>Categories:</h2>
+        <pre id="categories"></pre>
+      </div>
+      <div class="rounded-border">
+        <h2>Random Joke:</h2>
+        <pre id="joke"></pre>
+        <button id="getJoke">Get Random Joke</button>
+      </div>
+    </div>
+    <footer>
+      <p>&copy; Made with 😂 by Callan</p>
+    </footer>
+
+    <script>
+      fetch("/jokebook/categories")
+        .then((response) => response.text())
+        .then((data) => {
+          document.getElementById("categories").innerText = data;
+        });
+
+      document.getElementById("getJoke").onclick = function () {
+        const category = "funnyJoke";
+        fetch(`/jokebook/joke/${category}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("No joke available");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            document.getElementById(
+              "joke"
+            ).innerText = `${data.joke} - ${data.response}`;
+          })
+          .catch((error) => {
+            document.getElementById("joke").innerText = error.message;
+          });
+      };
+    </script>
+  </body>
+</html>
